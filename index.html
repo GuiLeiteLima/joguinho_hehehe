@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Maze Game</title>
+   
+</head>
+<body>
+    <div id="maze"></div>
+    <div class="scary" id="scary"></div>
+    <div class="congrats" id="congrats">Parabéns! Você chegou ao fim!</div>
+    <script>
+        const maze = [
+            "#####################",
+            "#P  #   #   #       #",
+            "# # # # # # # ##### #",
+            "# #   #   #   ##    #",
+            "# ### ########## ####",
+            "#   #         ##    #",
+            "### ##  ########### #",
+            "#    ##   #   ####  #",
+            "# ######  # # ###  ##",
+            "#    #   #  # ##  ###",
+            "#   ##   # #  #  #  #",
+            "#   #    # # #  ##  #",
+            "#        # #   #   E#",
+            "#        # #####    #",
+            "#        #          #",
+            "#####################"
+        ];
+
+        let playerPos = { x: 1, y: 1 };
+        let gameStarted = false;
+        let scareTimeout;
+
+        const mazeContainer = document.getElementById('maze');
+        const scaryDiv = document.getElementById('scary');
+        const congratsDiv = document.getElementById('congrats');
+
+        function drawMaze() {
+            mazeContainer.innerHTML = '';
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[y].length; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    if (maze[y][x] === '#') {
+                        cell.classList.add('wall');
+                    } else if (maze[y][x] === ' ') {
+                        cell.classList.add('path');
+                    } else if (maze[y][x] === 'E') {
+                        cell.classList.add('end');
+                    }
+                    if (y === playerPos.y && x === playerPos.x) {
+                        cell.classList.add('player');
+                    }
+                    mazeContainer.appendChild(cell);
+                }
+            }
+        }
+
+        function movePlayer(dx, dy) {
+            const newX = playerPos.x + dx;
+            const newY = playerPos.y + dy;
+            if (maze[newY][newX] === ' ' || maze[newY][newX] === 'E') {
+                playerPos.x = newX;
+                playerPos.y = newY;
+                if (maze[newY][newX] === 'E') {
+                    congratsDiv.style.display = 'flex';
+                }
+                drawMaze();
+                if (!gameStarted) {
+                    gameStarted = true;
+                    setTimeout(scheduleNextScare, 6000); // Start scare timer after 7 seconds
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            switch (e.key.toLowerCase()) {
+                case 'w':
+                    movePlayer(0, -1);
+                    break;
+                case 's':
+                    movePlayer(0, 1);
+                    break;
+                case 'a':
+                    movePlayer(-1, 0);
+                    break;
+                case 'd':
+                    movePlayer(1, 0);
+                    break;
+            }
+        });
+
+        function showScaryImage() {
+            scaryDiv.style.display = 'flex';
+            setTimeout(() => {
+                scaryDiv.style.display = 'none';
+                scheduleNextScare();
+            }, 3000);  // Display for 3 seconds
+        }
+
+        function scheduleNextScare() {
+            const randomTime = Math.floor(Math.random() * 10000) + 5000; // Between 5 and 15 seconds
+            scareTimeout = setTimeout(showScaryImage, randomTime);
+        }
+
+        drawMaze();
+    </script>
+</body>
+</html>
