@@ -73,7 +73,7 @@
                 drawMaze();
                 if (!gameStarted) {
                     gameStarted = true;
-                    setTimeout(scheduleNextScare, 15000);
+                    setTimeout(scheduleNextScare, 12000);
                 }
             }
         }
@@ -97,12 +97,12 @@
 
         function showScaryImage() {
             scaryDiv.style.display = 'flex';
-            scaryAudio.play(); // Play the scary audio
+            scaryAudio.play(); 
         }
 
         function scheduleNextScare() {
-            showScaryImage(); // Show the scary image immediately
-            // No need for timeout, image remains visible
+            showScaryImage(); 
+            
         }
 
         drawMaze();
