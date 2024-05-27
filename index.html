@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Calazans terrorzinho delas</title>
+    <title>Maze Game</title>
 </head>
 <body>
     <div id="maze"></div>
@@ -98,11 +98,36 @@
         function showScaryImage() {
             scaryDiv.style.display = 'flex';
             scaryAudio.play(); 
+
+            // Adicione um botão de recomeçar quando a imagem assustadora aparecer
+            const restartButton = document.createElement('button');
+            restartButton.textContent = 'Recomeçar';
+            restartButton.id = 'restartButton';
+            restartButton.addEventListener('click', () => {
+                // Reinicialize o jogo
+                restartGame();
+            });
+            scaryDiv.appendChild(restartButton);
         }
 
         function scheduleNextScare() {
             showScaryImage(); 
-            
+        }
+
+        // Função para reiniciar o jogo
+        function restartGame() {
+            // Redefina a posição do jogador para o início
+            playerPos = { x: 1, y: 1 };
+            // Esconda a mensagem de parabéns
+            congratsDiv.style.display = 'none';
+            // Oculte a imagem assustadora
+            scaryDiv.style.display = 'none';
+            // Redesenhe o labirinto
+            drawMaze();
+            // Reinicie o jogo
+            gameStarted = false;
+            // Agende a próxima aparição assustadora
+            setTimeout(scheduleNextScare, 12000);
         }
 
         drawMaze();
